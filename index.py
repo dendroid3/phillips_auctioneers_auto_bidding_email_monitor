@@ -9,7 +9,7 @@ import re
 import requests
 
 # Constants
-HARDCODED_SENDER = 'denis.mwangi24@students.dkut.ac.ke'
+HARDCODED_SENDER = 'bidding@phillipsauctioneers.co.ke'
 POLL_INTERVAL = 15
 API_ENDPOINT = 'http://localhost:8000/api/auction/new_email'
 
