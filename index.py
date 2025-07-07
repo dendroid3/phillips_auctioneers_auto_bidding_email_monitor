@@ -11,11 +11,10 @@ import threading
 import socket
 
 # Constants
-HARDCODED_SENDER = 'denis.mwangi24@students.dkut.ac.ke'
-POLL_INTERVAL = 15
-API_ENDPOINT = 'http://127.0.0.1:80/api/auction/new_email'
-HEARTBEAT_ENDPOINT = 'http://127.0.0.1:80/api/email/heartbeat'
-INIT_ENDPOINT = 'http://127.0.0.1:80/api/email/init'
+HARDCODED_SENDER = 'kazibin66@gmail.com'
+API_ENDPOINT = 'http://127.0.0.1:8000/api/auction/new_email'
+HEARTBEAT_ENDPOINT = 'http://127.0.0.1:8000/api/email/heartbeat'
+INIT_ENDPOINT = 'http://127.0.0.1:8000/api/email/init'
 HEARTBEAT_INTERVAL = 60  # 60 seconds = 1 minute
 
 def send_init_response(email_addr, success=True, error_message=None):
@@ -90,14 +89,15 @@ def parse_bid_info(body):
 
     return current_bid, url
 
-def send_to_api(url, current_bid):
+def send_to_api(url, current_bid, email_addr):
     if not url or not current_bid:
         print("Skipping API call (missing data)")
         return
 
     payload = {
         "url": url,
-        "current_bid": current_bid
+        "current_bid": current_bid,
+        "email": email_addr
     }
     print(f"Sending to API: {payload}")
 
@@ -107,7 +107,7 @@ def send_to_api(url, current_bid):
     except Exception as e:
         print(f"API call failed: {e}")
 
-def monitor_emails(email_addr, password):
+def monitor_emails(email_addr, password, interval):
     seen_ids = set()
     mail = None  # Initialize mail variable outside try block
     
@@ -152,7 +152,7 @@ def monitor_emails(email_addr, password):
         print("[+] Inbox selected")
 
         while True:
-            print(f"[+] Polling... (interval: {POLL_INTERVAL}s)")
+            print(f"[+] Polling... (interval: {interval}s)")
             try:
                 mail.noop()  # Keep connection alive
                 status, msg_ids = mail.search(None, 'UNSEEN')
@@ -187,12 +187,12 @@ def monitor_emails(email_addr, password):
 
                         body = extract_email_body(msg)
                         current_bid, url = parse_bid_info(body)
-                        send_to_api(url, current_bid)
+                        send_to_api(url, current_bid, email_addr)
 
-                time.sleep(POLL_INTERVAL)
+                time.sleep(int(interval))
             except Exception as e:
                 print(f"[!] Polling error: {e}")
-                time.sleep(POLL_INTERVAL * 2)  # Longer wait after error
+                time.sleep(int(interval) * 2)  # Longer wait after error
                 continue
 
     except KeyboardInterrupt:
@@ -212,6 +212,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Monitor Gmail inbox for auction emails')
     parser.add_argument('email', help='Gmail address')
     parser.add_argument('password', help='Gmail password or app password')
+    parser.add_argument('interval', help='Poll interval')
     args = parser.parse_args()
 
-    monitor_emails(args.email, args.password)
+    monitor_emails(args.email, args.password, args.interval)
