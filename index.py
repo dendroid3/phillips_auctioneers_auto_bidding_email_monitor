@@ -12,9 +12,9 @@ import socket
 
 # Constants
 HARDCODED_SENDER = 'kazibin66@gmail.com'
-API_ENDPOINT = 'http://127.0.0.1:8000/api/auction/new_email'
-HEARTBEAT_ENDPOINT = 'http://127.0.0.1:8000/api/email/heartbeat'
-INIT_ENDPOINT = 'http://127.0.0.1:8000/api/email/init'
+API_ENDPOINT = 'http://127.0.0.1:80/api/auction/new_email'
+HEARTBEAT_ENDPOINT = 'http://127.0.0.1:80/api/email/heartbeat'
+INIT_ENDPOINT = 'http://127.0.0.1:80/api/email/init'
 HEARTBEAT_INTERVAL = 60  # 60 seconds = 1 minute
 
 def send_init_response(email_addr, success=True, error_message=None):
