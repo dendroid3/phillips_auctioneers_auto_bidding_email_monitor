@@ -11,7 +11,7 @@ import threading
 import socket
 
 # Constants
-HARDCODED_SENDER = 'bidding@phillipsauctioneers.co.ke'
+HARDCODED_SENDER = 'kazibin66@gmail.com'
 API_ENDPOINT = 'http://127.0.0.1:80/api/auction/new_email'
 HEARTBEAT_ENDPOINT = 'http://127.0.0.1:80/api/email/heartbeat'
 INIT_ENDPOINT = 'http://127.0.0.1:80/api/email/init'
